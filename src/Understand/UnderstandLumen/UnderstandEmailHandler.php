@@ -32,13 +32,21 @@ class UnderstandEmailHandler extends \UnderstandMonolog\Handler\UnderstandBaseHa
     {
         $params = json_decode($data, true);
 
+        // Only email formatted log messages, not raw exceptions
+        if (count($data['context'])) {
+            return;
+        }
+
+        $params['exception'] = $params['message'];
+        $subject = preg_replace('/(.*)\n[\s\S]*/', '$1', $params['exception']);
+
         try {
-            Mail::raw(view('mail.exception', $params), function ($msg) {
-                $msg->to([$this->to]);
+            Mail::send('mail.exception', $params, function ($msg) use ($subject) {
                 $msg->from([$this->from]);
+                $msg->to([$this->to])->subject('Schoolbox Proxy Error: ' . $subject);
             });
         } catch (\Exception $e) {
-
+            echo $e->getMessage();
         }
     }
 }
