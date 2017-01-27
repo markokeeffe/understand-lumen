@@ -52,7 +52,10 @@ class UnderstandLumenServiceProvider extends ServiceProvider
 
         if ($handlerType == 'email')
         {
-            $handler = new UnderstandEmailHandler($inputToken, $apiUrl, $silent, $sslBundlePath);
+            $from = $this->app['config']->get('understand_lumen.email.from');
+            $to = $this->app['config']->get('understand_lumen.email.to');
+
+            $handler = new UnderstandEmailHandler($from, $to, $inputToken, $apiUrl, $silent, $sslBundlePath);
         }
         elseif ($handlerType == 'async')
         {
