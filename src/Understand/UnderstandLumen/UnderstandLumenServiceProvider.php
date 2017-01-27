@@ -50,7 +50,11 @@ class UnderstandLumenServiceProvider extends ServiceProvider
         $sslBundlePath = $this->app['config']->get('understand_lumen.ssl_bundle_path', false);
         $metaFields = $this->app['config']->get('understand_lumen.meta', []);
 
-        if ($handlerType == 'async')
+        if ($handlerType == 'email')
+        {
+            $handler = new UnderstandEmailHandler($inputToken, $apiUrl, $silent, $sslBundlePath);
+        }
+        elseif ($handlerType == 'async')
         {
             $handler = new UnderstandAsyncHandler($inputToken, $apiUrl, $silent, $sslBundlePath);
         }
