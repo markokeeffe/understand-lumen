@@ -36,7 +36,7 @@ class UnderstandEmailHandler extends \UnderstandMonolog\Handler\UnderstandBaseHa
         $params = json_decode($data, true);
 
         // Only email formatted log messages, not raw exceptions
-        if (count($params['context'])) {
+        if (count($params['context']) && !isset($params['context']['SCRAPING'])) {
             return;
         }
 
